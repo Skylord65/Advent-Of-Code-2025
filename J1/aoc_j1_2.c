@@ -1,0 +1,65 @@
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <assert.h>
+
+int main(int argc, char const *argv[])
+{
+    FILE* f = fopen("input.txt", "r");
+    char* line = NULL;
+    size_t n = 0;
+    int cpt = 0;
+    int current_number = 50;
+    char* text_number = malloc(sizeof(char)*10);
+    while (getline(&line, &n, f)!=EOF)
+    {
+        int save = current_number;
+        char* text_number = malloc(sizeof(char)*n+1);
+        if(line[0] == 'L') {
+            int i = 1;
+            while (line[i]!='\n')
+            {
+                text_number[i-1] = line[i];
+                i++;
+            }
+            text_number[i] = '\0';
+            int num_temp = atoi(text_number);
+            cpt+=num_temp/100;
+            current_number += (num_temp)%100;      
+        }
+        if(line[0] == 'R') {
+            
+            int i = 1;
+            while (line[i]!='\n')
+            {
+                text_number[i-1] = line[i];
+                i++;
+            }
+            text_number[i] = '\0';
+            int num_temp = atoi(text_number);
+            cpt+=num_temp/100;
+            current_number -= (num_temp)%100;           
+        }
+        if(current_number<0) {
+            current_number+=100;
+            if(save!=0) cpt++;
+        }
+        if(current_number==0) cpt++;
+        if (current_number>=100)
+        {
+            current_number = current_number%100;
+            cpt++;
+        }
+        
+
+        free(text_number);
+    }
+    
+    //free(line);
+    printf("cpt : %d\n", cpt);
+    fclose(f);
+
+    return 0;
+}
